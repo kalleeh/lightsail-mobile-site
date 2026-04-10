@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lightsail Mobile — AWS Lightsail Management on iOS</title>
+  <style>
+    :root {
+      --bg:#0D1117;--surface:#161B22;--raised:#21262D;--border:#30363D;
+      --accent:#FF9900;--accent2:#FFC082;--green:#50C95E;--amber:#FFB86F;
+      --text:#F0F6FC;--muted:#8B949E;--faint:#484F58;--radius:12px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+    a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+    .container{max-width:760px;margin:0 auto;padding:0 24px}
+    nav{border-bottom:1px solid var(--border);padding:18px 0}
+    nav .container{display:flex;align-items:center;justify-content:space-between}
+    .logo{font-size:18px;font-weight:700;letter-spacing:-0.3px;color:var(--text)}.logo span{color:var(--accent)}
+    nav a{font-size:14px;color:var(--muted)}nav a:hover{color:var(--text);text-decoration:none}
+    .hero{position:relative;padding:80px 0 64px;text-align:center;overflow:hidden}
+    .hero-inner{position:relative;z-index:1}
+    .badge{display:inline-block;background:rgba(255,153,0,0.1);color:var(--accent);border:1px solid rgba(255,153,0,0.25);border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;padding:4px 14px;margin-bottom:24px}
+    h1{font-size:clamp(32px,6vw,52px);font-weight:800;letter-spacing:-1.5px;line-height:1.1;margin-bottom:20px}
+    h1 em{font-style:normal;color:var(--accent)}
+    .hero p{font-size:18px;color:var(--muted);max-width:540px;margin:0 auto 36px}
+    .cta-group{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:var(--radius);font-size:15px;font-weight:600;transition:opacity 0.15s}
+    .btn:hover{opacity:0.85;text-decoration:none}
+    .btn-primary{background:var(--accent);color:#000}.btn-secondary{background:var(--raised);color:var(--text);border:1px solid var(--border)}
+    .phone-section{padding:64px 0 32px;overflow:hidden}
+    .phone-grid{display:flex;justify-content:center;align-items:flex-end;gap:12px;padding:24px 0 40px}
+    .phone-wrapper{display:flex;flex-direction:column;align-items:center;gap:12px;transition:transform 0.3s}
+    .phone-frame{position:relative;width:210px;border-radius:38px;border:1.5px solid rgba(255,255,255,0.10);box-shadow:0 32px 80px rgba(0,0,0,0.70),0 0 0 10px rgba(0,0,0,0.25);overflow:hidden;background:#000;aspect-ratio:9/19.5}
+    .phone-frame img{display:block;width:100%;height:100%;object-fit:cover}
+    .dynamic-island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:29%;height:10px;background:#060608;border-radius:999px;z-index:2}
+    .phone-label{font-size:12px;color:var(--faint);text-align:center}
+    .phone-wrapper:nth-child(1){transform:rotate(-4deg) translateY(28px);opacity:0.65}
+    .phone-wrapper:nth-child(2) .phone-frame{width:230px;box-shadow:0 32px 80px rgba(0,0,0,0.70),0 0 0 10px rgba(0,0,0,0.25),0 0 70px rgba(255,153,0,0.18)}
+    .phone-wrapper:nth-child(3) .phone-frame{width:230px;box-shadow:0 32px 80px rgba(0,0,0,0.70),0 0 0 10px rgba(0,0,0,0.25),0 0 70px rgba(255,153,0,0.18)}
+    .phone-wrapper:nth-child(4){transform:rotate(4deg) translateY(28px);opacity:0.65}
+    .scroll-dots{display:none;justify-content:center;gap:6px;padding-bottom:24px}
+    .scroll-dots span{display:block;width:6px;height:6px;border-radius:999px;background:var(--faint);transition:width 0.25s,background 0.25s}
+    .scroll-dots span.active{width:22px;background:var(--accent)}
+    @media(max-width:640px){
+      .phone-grid{overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:24px 20px;margin:0 -20px;justify-content:flex-start;align-items:center}
+      .phone-grid::-webkit-scrollbar{display:none}
+      .phone-wrapper{scroll-snap-align:center;transform:none!important;opacity:1!important;flex-shrink:0}
+      .phone-frame{width:200px}
+      .phone-wrapper:nth-child(2) .phone-frame,.phone-wrapper:nth-child(3) .phone-frame{width:200px;box-shadow:0 32px 80px rgba(0,0,0,0.70),0 0 0 10px rgba(0,0,0,0.25)}
+      .scroll-dots{display:flex}
+    }
+    .features{padding:0 0 72px}.section-label{font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--faint);margin-bottom:32px}
+    .feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+    .feature-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px}
+    .feature-icon{margin-bottom:14px}.feature-card h3{font-size:15px;font-weight:700;margin-bottom:6px}
+    .feature-card p{font-size:13px;color:var(--muted);line-height:1.5}
+    .how{padding:0 0 72px}.steps{display:flex;flex-direction:column}
+    .step{display:flex;gap:20px;padding-bottom:28px}.step:last-child{padding-bottom:0}
+    .step-num{flex-shrink:0;width:32px;height:32px;border-radius:50%;background:rgba(255,153,0,0.1);border:1px solid rgba(255,153,0,0.25);color:var(--accent);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}
+    .step-body h3{font-size:15px;font-weight:700;margin-bottom:4px;padding-top:5px}.step-body p{font-size:13px;color:var(--muted)}
+    .privacy-strip{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:40px 0;margin-bottom:72px}
+    .privacy-strip h2{font-size:20px;font-weight:700;margin-bottom:8px}.privacy-strip p{font-size:14px;color:var(--muted);max-width:580px}
+    footer{border-top:1px solid var(--border);padding:28px 0}
+    footer .container{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    footer p{font-size:13px;color:var(--faint)}footer a{color:var(--muted);font-size:13px}footer a:hover{color:var(--text);text-decoration:none}
+    @media(max-width:480px){.hero{padding:56px 0 48px}h1{font-size:32px}}
+  </style>
+</head>
+<body>
+  <nav><div class="container"><span class="logo">Lightsail Mobile<span>.</span></span><a href="privacy.html">Privacy Policy</a></div></nav>
+  <main>
+    <section class="hero"><div class="container hero-inner">
+      <div class="badge">iOS &amp; iPadOS</div>
+      <h1>Your AWS fleet,<br><em>in your pocket</em></h1>
+      <p>Manage Lightsail instances, databases, networking, and storage — with SSH terminal, fleet commands, and real-time health insights — all from your iPhone or iPad.</p>
+      <div class="cta-group">
+        <a class="btn btn-primary" href="https://github.com/wallbomk/lightsail-mobile/issues">Get Support</a>
+        <a class="btn btn-secondary" href="privacy.html">Privacy Policy</a>
+      </div>
+    </div></section>
+
+    <section class="phone-section">
+      <div class="phone-grid" id="phoneGrid">
+        <div class="phone-wrapper"><div class="phone-frame"><div class="dynamic-island"></div><img src="" alt="Instances" loading="lazy"></div><span class="phone-label">Instances</span></div>
+        <div class="phone-wrapper"><div class="phone-frame"><div class="dynamic-island"></div><img src="" alt="SSH Terminal" loading="lazy"></div><span class="phone-label">SSH Terminal</span></div>
+        <div class="phone-wrapper"><div class="phone-frame"><div class="dynamic-island"></div><img src="" alt="Fleet Commands" loading="lazy"></div><span class="phone-label">Fleet Commands</span></div>
+        <div class="phone-wrapper"><div class="phone-frame"><div class="dynamic-island"></div><img src="" alt="Health Insights" loading="lazy"></div><span class="phone-label">Health Insights</span></div>
+      </div>
+      <div class="scroll-dots" aria-hidden="true"><span class="active"></span><span></span><span></span><span></span></div>
+    </section>
+
+    <div class="container">
+      <section class="features">
+        <p class="section-label">Features</p>
+        <div class="feature-grid">
+          <div class="feature-card"><div class="feature-icon"><svg width="44" height="44" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="11" fill="#50C95E" fill-opacity="0.12"/><g transform="translate(10,10)" stroke="#50C95E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6.75 7.5 3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0 0 21 18V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v12a2.25 2.25 0 0 0 2.25 2.25Z"/></g></svg></div><h3>SSH Terminal</h3><p>Full xterm-256color terminal with custom keyboard toolbar. Connect to any instance with one tap.</p></div>
+          <div class="feature-card"><div class="feature-icon"><svg width="44" height="44" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="11" fill="#FF9900" fill-opacity="0.12"/><g transform="translate(10,10)" stroke="#FF9900" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3.75 13.5 10.5-11.25L12 10.5h8.25l-10.5 11.25L12 13.5H3.75Z"/></g></svg></div><h3>Fleet Commands</h3><p>Run commands on multiple instances simultaneously. Save presets for common operations.</p></div>
+          <div class="feature-card"><div class="feature-icon"><svg width="44" height="44" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="11" fill="#FFB86F" fill-opacity="0.12"/><g transform="translate(10,10)" stroke="#FFB86F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8.25c0-2.485-4.03-4.5-9-4.5s-9 2.015-9 4.5m18 0v7.5c0 2.485-4.03 4.5-9 4.5s-9-2.015-9-4.5v-7.5m18 0c0 2.485-4.03 4.5-9 4.5s-9-2.015-9-4.5"/><path d="M3 12c0 2.485 4.03 4.5 9 4.5"/></g></svg></div><h3>Health Insights</h3><p>Anomaly detection, trend analysis, and burst capacity warnings. Know what happened while you were away.</p></div>
+          <div class="feature-card"><div class="feature-icon"><svg width="44" height="44" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="11" fill="#50C95E" fill-opacity="0.12"/><g transform="translate(10,10)" stroke="#50C95E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 3.07-.879 4.242 0l1.137.659V6m-1.5.341-.879-.659c-1.172-.879-3.07-.879-4.242 0-1.172.879-3.07.879-4.242 0L7.5 4.841"/><path d="M2.25 18a2.25 2.25 0 0 0 2.25 2.25h15a2.25 2.25 0 0 0 2.25-2.25"/></g></svg></div><h3>Cost Optimizer</h3><p>Find over-provisioned instances, unused resources, and stopped servers still costing money.</p></div>
+          <div class="feature-card"><div class="feature-icon"><svg width="44" height="44" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="11" fill="#FF9900" fill-opacity="0.12"/><g transform="translate(10,10)" stroke="#FF9900" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 0h10.5c.621 0 1.125.504 1.125 1.125v7.125c0 .621-.504 1.125-1.125 1.125H6.75a1.125 1.125 0 0 1-1.125-1.125v-7.125c0-.621.504-1.125 1.125-1.125Z"/></g></svg></div><h3>Quick Tunnel</h3><p>SSH port forwarding to access remote services. Preview web apps or connect to databases securely.</p></div>
+          <div class="feature-card"><div class="feature-icon"><svg width="44" height="44" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="11" fill="#FFB86F" fill-opacity="0.12"/><g transform="translate(10,10)" stroke="#FFB86F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></g></svg></div><h3>Incident Timeline</h3><p>Correlated view of operations, metric anomalies, and state changes. Understand what happened and when.</p></div>
+        </div>
+      </section>
+
+      <section class="how">
+        <p class="section-label">How it works</p>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-body"><h3>Sign in with AWS</h3><p>Use IAM access keys or AWS SSO. Credentials are stored in the iOS Keychain, never on disk.</p></div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-body"><h3>See everything at a glance</h3><p>Instances, databases, networking, storage — all organized by resource type with real-time status.</p></div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-body"><h3>Take action from anywhere</h3><p>Start, stop, reboot, SSH, manage firewall rules, create snapshots — all from your phone.</p></div></div>
+          <div class="step"><div class="step-num">4</div><div class="step-body"><h3>Stay informed</h3><p>Health insights detect anomalies, cost optimizer finds savings, and the incident timeline shows what happened.</p></div></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="privacy-strip"><div class="container">
+      <h2>Your credentials stay on your device</h2>
+      <p>Lightsail Mobile communicates directly with the AWS API over HTTPS. No data is collected, no analytics run, no proxy servers are used. Your AWS credentials are stored in the iOS Keychain with hardware-backed encryption. <a href="privacy.html">Read the full privacy policy →</a></p>
+    </div></div>
+  </main>
+
+  <footer><div class="container">
+    <p>© 2026 Lightsail Mobile</p>
+    <div style="display:flex;gap:20px">
+      <a href="https://github.com/wallbomk/lightsail-mobile">GitHub</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="https://github.com/wallbomk/lightsail-mobile/issues">Support</a>
+    </div>
+  </div></footer>
+
+  <script>
+    (function(){var g=document.getElementById('phoneGrid'),d=Array.from(document.querySelectorAll('.scroll-dots span')),p=Array.from(g?g.querySelectorAll('.phone-wrapper'):[]);if(!g||!d.length)return;g.addEventListener('scroll',function(){var m=g.scrollLeft+g.offsetWidth/2,c=0,n=Infinity;p.forEach(function(e,i){var x=Math.abs((e.offsetLeft+e.offsetWidth/2)-m);if(x<n){n=x;c=i}});d.forEach(function(e,i){e.classList.toggle('active',i===c)})},{passive:true})})();
+  </script>
+</body>
+</html>
